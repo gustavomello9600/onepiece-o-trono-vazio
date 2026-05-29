@@ -415,14 +415,24 @@ body {
 /* SVG Node and Route Styles */
 .map-route {
     fill: none;
-    stroke: rgba(255, 255, 255, 0.08);
+    stroke: rgba(255, 255, 255, 0.22); /* Highly visible connection paths */
     stroke-width: 3px;
     transition: stroke var(--transition-speed), stroke-width var(--transition-speed);
 }
 
 .map-route.hazard {
-    stroke: rgba(178, 34, 34, 0.3);
+    stroke: rgba(255, 75, 43, 0.6); /* Vibrant warning color */
     stroke-dasharray: 6, 4;
+    animation: hazardPulse 1.5s infinite linear;
+}
+
+@keyframes hazardPulse {
+    from {
+        stroke-dashoffset: 20;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 
 .map-route.active {
@@ -454,48 +464,67 @@ body {
     filter: url(#glow-strong);
 }
 
+/* Island Core Gradient Styling */
 .island-base {
-    fill: #222c3c;
-    stroke: rgba(255,255,255,0.2);
+    stroke: rgba(255, 255, 255, 0.25);
     stroke-width: 2px;
-    transition: fill var(--transition-speed), stroke var(--transition-speed);
+    transition: all var(--transition-speed);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
 }
 
-.node-group.unexplored .island-base {
-    fill: #151d28;
+.island-base.type-naval { fill: url(#grad-naval); stroke: var(--color-marine); stroke-width: 2.5px; }
+.island-base.type-final { fill: url(#grad-final); stroke: var(--color-gold); stroke-width: 3px; }
+.island-base.type-winter { fill: url(#grad-winter); }
+.island-base.type-volcano { fill: url(#grad-volcano); }
+.island-base.type-nature { fill: url(#grad-nature); }
+.island-base.type-desert { fill: url(#grad-desert); }
+.island-base.type-mystery { fill: url(#grad-mystery); }
+.island-base.type-unexplored {
+    fill: url(#grad-unexplored);
     stroke-dasharray: 4, 3;
+    stroke: rgba(255, 255, 255, 0.15);
 }
 
 .node-group.marine-guarrison .island-base {
     stroke: var(--color-marine);
+    stroke-width: 2.5px;
 }
 
-.node-group.navy-ford .island-base {
-    fill: #0d2847;
-    stroke: var(--color-marine);
-    stroke-width: 3px;
-}
-
+/* Island Labels with SVG text outlines (halo effect) for extreme readability */
 .island-label {
-    font-size: 10px;
-    font-weight: 700;
-    fill: var(--text-primary);
+    font-size: 11px;
+    font-weight: 800;
+    fill: #ffffff;
+    stroke: #070a0f;
+    stroke-width: 3.5px;
+    paint-order: stroke fill;
     text-anchor: middle;
     pointer-events: none;
+    letter-spacing: 0.5px;
 }
 
 /* Fleet & Cell Tokens on Board */
 .token-circle {
-    stroke: #000;
-    stroke-width: 1px;
+    stroke: rgba(0, 0, 0, 0.5);
+    stroke-width: 1.5px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+    transition: all var(--transition-speed) ease;
+}
+
+.token-circle.selected {
+    stroke: var(--color-gold) !important;
+    stroke-width: 3px !important;
+    filter: url(#glow-light) !important;
 }
 
 .token-text {
-    font-size: 8px;
-    font-weight: 800;
-    fill: #fff;
+    font-size: 9px;
+    font-weight: 950;
+    fill: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     text-anchor: middle;
     dominant-baseline: central;
+    pointer-events: none;
 }
 
 /* ==========================================================================

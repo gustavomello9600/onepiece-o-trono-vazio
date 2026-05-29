@@ -242,7 +242,20 @@ class BoardUI {
             core.setAttribute("cx", island.x);
             core.setAttribute("cy", island.y);
             core.setAttribute("r", 25);
-            core.className.baseValue = "island-base";
+            
+            // Assign premium gradient depending on island type
+            let gradientClass = "type-unexplored";
+            if (island.revealed) {
+                if (island.id === 1) gradientClass = "type-naval";
+                else if (island.id === 2) gradientClass = "type-final";
+                else if (island.name.includes("Invernal")) gradientClass = "type-winter";
+                else if (island.name.includes("Vulcânica")) gradientClass = "type-volcano";
+                else if (island.name.includes("Deserto")) gradientClass = "type-desert";
+                else if (island.name.includes("Selva") || island.name.includes("Ruínas")) gradientClass = "type-nature";
+                else if (island.name.includes("País") || island.name.includes("Fantasma")) gradientClass = "type-mystery";
+                else gradientClass = "type-mystery";
+            }
+            core.className.baseValue = `island-base ${gradientClass}`;
             group.appendChild(core);
             
             // Structure Badge (if present)
@@ -302,12 +315,13 @@ class BoardUI {
             const ty = island.y + radius * Math.sin(angle);
             
             const tokenGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            const isSelected = (this.selectedNodeId === island.id && this.selectedUnitsIdx.includes(index));
             
             const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             circle.setAttribute("cx", tx);
             circle.setAttribute("cy", ty);
-            circle.setAttribute("r", 9);
-            circle.className.baseValue = "token-circle";
+            circle.setAttribute("r", isSelected ? 11 : 9);
+            circle.className.baseValue = `token-circle ${isSelected ? 'selected' : ''}`;
             
             // Faction color
             let color = "gray";
