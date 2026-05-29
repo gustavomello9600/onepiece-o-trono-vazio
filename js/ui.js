@@ -38,6 +38,23 @@ class BoardUI {
         document.getElementById("btn-trade").addEventListener("click", () => this.openTradeModal());
         document.getElementById("btn-trade-execute").addEventListener("click", () => this.executeTradeTransaction());
         
+        // Collapsible Sidebars
+        const playersPanel = document.getElementById("players-panel");
+        const togglePlayersBtn = document.getElementById("btn-toggle-players");
+        togglePlayersBtn.addEventListener("click", () => {
+            playersPanel.classList.toggle("collapsed");
+            togglePlayersBtn.innerText = playersPanel.classList.contains("collapsed") ? "▶" : "◀";
+            togglePlayersBtn.title = playersPanel.classList.contains("collapsed") ? "Expandir Painel" : "Recolher Painel";
+        });
+
+        const controlPanel = document.getElementById("control-panel");
+        const toggleControlsBtn = document.getElementById("btn-toggle-controls");
+        toggleControlsBtn.addEventListener("click", () => {
+            controlPanel.classList.toggle("collapsed");
+            toggleControlsBtn.innerText = controlPanel.classList.contains("collapsed") ? "◀" : "▶";
+            toggleControlsBtn.title = controlPanel.classList.contains("collapsed") ? "Expandir Painel" : "Recolher Painel";
+        });
+        
         // Trigger Setup Initial Drawing
         this.renderAll();
     }

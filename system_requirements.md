@@ -283,3 +283,13 @@ Para garantir visibilidade excepcional em telas digitais de alta resolução:
 ### 8.2. Painéis do Console de Ações
 * **Contraste de Desabilitação**: Botões de ação desabilitados (`:disabled`) devem possuir opacidade de `0.35`, com fontes em cor cinza contrastante (`hsl(210, 8%, 50%)`) para fácil distinção táctil.
 * **Log do Diário de Bordo**: Deve categorizar mensagens por cores funcionais (Vermelho para combate/danos, Verde para transações/acordos, Dourado para eventos globais) em fonte mono-espaçada.
+
+### 8.3. Layout Focado no Mapa e Painéis Retráteis (Collapsible)
+* **Visual Fullscreen**: O mapa interativo (`#map-panel`) deve servir de plano de fundo principal da tela ocupando 100% da largura e altura visíveis (`100vw` e `100vh`), utilizando a textura premium integrada `nautical_sea_chart.png`.
+* **Painéis Flutuantes e Colapsáveis**:
+  - O painel de jogadores (`#players-panel`) e o console de ações/loja/eventos/logs (`#control-panel`) devem flutuar de forma translúcida sobre o mapa.
+  - Cada painel possui botões de gatilho de recolhimento (`◀` / `▶`) anexados às suas bordas internas.
+  - Clicar nos gatilhos deve deslizar os painéis para fora da tela usando transições suaves de CSS (`transform: translateX`). Os botões de toggle permanecem nas bordas da tela para re-expansão rápida.
+
+### 8.4. Telas de Splash e Ativos de Arte Temáticos
+* **Imagem de Fundo de Passagem de Turno**: O modal de pass-and-play (`modal-turn-transition`) deve exibir o banner temático do Trono Vazio utilizando a arte digital exclusiva gerada `empty_throne.png` mesclada com gradientes escuros, garantindo privacidade e cimentando o tema imperial do jogo.
