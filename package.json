@@ -1,0 +1,18 @@
+{
+  "name": "onecoin",
+  "version": "1.0.0",
+  "description": "One Piece: O Trono Vazio - Protótipo do Jogo de Tabuleiro Geopolítico",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000"
+  },
+  "keywords": [
+    "boardgame",
+    "onepiece",
+    "coin",
+    "simulation"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}
