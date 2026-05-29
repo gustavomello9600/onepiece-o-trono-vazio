@@ -248,26 +248,64 @@ Cada ambição rege especificamente como o jogador adquire VPs ao longo de um At
 ### 7.1. Custo de Oportunidade e Manutenção
 Frotas gigantes exigem manutenção ativa. Se um jogador mantiver mais de 6 frotas ativas no tabuleiro no final da sua manutenção, ele deve pagar **1 Berry por unidade excedente** ao cofre central. Caso não possua saldo, as unidades excedentes de sua escolha são descartadas (afundam por falta de suprimentos).
 
-### 7.2. Mecânica de Retorno (Bônus do Azarão)
-Se o Líder de um jogador for destruído em combate:
-* O Líder realiza **Respawn** na sua base natal na rodada seguinte.
-* O jogador afetado ganha o status de **Azarão** (Underdog):
-  - Recebe +2 Berries de compensação de seguro no Respawn.
-  - Ganha +1 AP adicional no seu primeiro turno pós-respawn para mitigar o atraso no tabuleiro.
+### 7.2. Mecânica de Retorno (Bônus do Azarão) e Locais de Respawn
+Se o Líder de um jogador for destruído em combate, ele é retirado do tabuleiro e deve realizar a ação de ressurgimento na rodada seguinte seguindo as regras abaixo:
+* **Locais de Ressurgimento (Respawn Nodes)**:
+  - *Almirante / Cipher-Pol*: Retornam em Nova Marineford (Nó 1).
+  - *Yonkou*: Retorna na sua Fortaleza Regional de início de partida (Nó 8 ou o correspondente definido na Carta de Setup).
+  - *Capitão Pirata*: Retorna em um dos Pontos de Entrada habilitados pelas bordas (Nós 3 ou 4).
+  - *Líder Revolucionário*: Retorna em qualquer ilha que possua pelo menos 1 Célula Revolucionária aliada ativa.
+* **Bônus do Azarão (Underdog)**: No turno imediato após o Respawn, o jogador afetado recebe:
+  - Compensação financeira emergencial de **+2 Berries**.
+  - Incremento de **+1 AP** no turno para recuperar mobilidade.
+  - Proteção contra novos combates na rodada de respawn (imunidade de ataque imediato).
 
 ### 7.3. Taxação de Monopólio
 Se um jogador possuir mais de 12 Berries em seu cofre durante a Fase Global, qualquer Evento que aplique taxas (ex: "Auditoria Fiscal") cobrará o dobro do valor desse jogador, incentivando a circulação ativa de capital e compras no Mercado Negro.
+
+### 7.4. Economia de Recompensas (Bounty e Contratos)
+O jogo implementa um sistema de caça ativa para regular frotas dominantes e impulsionar confrontos inter-facções:
+1. **Recompensa do Capitão Pirata (Bounty)**:
+   - O Bounty é um valor medido em Berries associado ao Líder Pirata.
+   - O Bounty inicial é 0 e aumenta em **+1 Berry** para cada Quest resolvida, ilha Saqueada, ou frota da Marinha afundada.
+   - Se o Almirante (Marinha) derrotar o Líder Pirata em combate, ele recebe Berries do tesouro nacional iguais ao valor acumulado de Bounty daquele Pirata, resetando-o para 0.
+2. **Contratos / Recompensas do Yonkou (Chaos Mercenaries)**:
+   - Para fins de sua Ambição B (Sindicato do Caos), o Yonkou pode colocar recompensas em Berries em qualquer frota ou estrutura da Marinha ativa.
+   - Qualquer jogador Rebelde que destruir o alvo designado recebe as Berries do Yonkou e o Yonkou pontua os correspondentes VPs de Ambição.
 
 ---
 
 ## 8. REQUISITOS DE DESIGN DA INTERFACE (UI/UX)
 
-Para garantir visibilidade excepcional em telas digitais de alta resolução:
+Para garantir visibilidade excepcional em telas digitais de alta resolução e focar a experiência no mapa geográfico do Novo Mundo:
 
-### 8.1. Tokens Visuais de Ilhas no SVG
-* As ilhas devem conter bordas desenhadas com degradê radial correspondente ao bioma.
-* **Glow Efeito (Hover)**: Ao passar o cursor, a ilha selecionada deve disparar uma sombra pulsante utilizando filtros SVG (`feGaussianBlur` stdDeviation de 4px a 8px).
-* **Text Halo de Legibilidade**: Todo rótulo de texto sob as ilhas deve ser renderizado da seguinte forma:
+### 8.1. Arquitetura da Viewport e Foco no Mapa
+* **Visual Fullscreen**: O mapa interativo (`#map-panel`) deve servir como a base visual principal da tela ocupando 100% da largura e altura visíveis da janela do navegador (`100vw` e `100vh`).
+* **Textura Náutica Premium**: O plano de fundo do mapa deve utilizar a textura envelhecida integrada `assets/images/nautical_sea_chart.png` em conjunção com filtros de gradiente radial escuro (`rgba(7, 10, 15, 0.35)`) para evocar a atmosfera de um mapa de navegação à luz de velas.
+* **Controles de Navegação (Zoom/Pan)**: O mapa SVG interativo deve suportar controles de zoom e enquadramento (`btn-zoom-in`, `btn-zoom-out`, `btn-zoom-fit`) flutuando na parte superior esquerda para permitir que o usuário reposicione ou amplie o foco do tabuleiro sem distorcer os elementos.
+
+### 8.2. Painéis Laterais Flutuantes e Sistema Colapsável (Collapsible)
+Os painéis de informações secundárias devem flutuar de maneira translúcida sobre o mapa principal, com a capacidade de serem colapsados pelo usuário para maximizar a área de visualização e imersão no tabuleiro:
+* **Painel da Esquerda (Líderes e Facções - `#players-panel`)**:
+  - Exibe o status e inventários de cada jogador.
+  - No estado ativo normal, ocupa uma largura de `290px`.
+  - Ao ser colapsado, aplica uma transição CSS suave (`transform: translateX(-310px)`) baseada em curva cúbica de velocidade (`0.3s cubic-bezier(0.4, 0, 0.2, 1)`).
+* **Painel da Direita (Eventos, Console de Ações e Logs - `#control-panel`)**:
+  - Contém o console de ações ativas, loja de armas, eventos de era e diário de bordo.
+  - No estado ativo normal, ocupa uma largura de `350px`.
+  - Ao ser colapsado, aplica a transição CSS correspondente (`transform: translateX(370px)`).
+* **Gatilhos de Recolhimento Dinâmicos (`.panel-toggle-btn`)**:
+  - Cada painel deve expor um botão de toggle vertical estreito anexado na borda interna (`#btn-toggle-players` e `#btn-toggle-controls`).
+  - O botão deve permanecer visível na borda da tela mesmo quando o painel estiver ocultado.
+  - **Lógica dos Sentidos dos Ícones**:
+    - *Painel Esquerdo*: Exibe `◀` quando expandido (recolher para a esquerda) e `▶` quando colapsado (expandir para a direita).
+    - *Painel Direito*: Exibe `▶` quando expandido (recolher para a direita) e `◀` quando colapsado (expandir para a esquerda).
+
+### 8.3. Tokens Visuais de Ilhas no SVG
+* **Estética Radial dos Biomas**: As ilhas devem conter bordas desenhadas com degradê radial correspondente ao bioma (ex: tons azuis/gelo para biomas invernais, tons quentes/laranjas para vulcânicos).
+* **Bordas Temáticas de Facção**: Se uma ilha abrigar uma estrutura militar de guarnição (como Marineford), a borda do círculo da ilha deve adotar a cor de acento daquela facção (ex: azul marinho para a Marinha).
+* **Filtros de Brilho Dinâmico (Glow Efeito)**: Ao passar o cursor ou selecionar uma ilha, filtros SVG Gaussianos (`feGaussianBlur` stdDeviation de 3px a 8px) devem disparar sombras brilhantes e pulsantes douradas para guiar a interação.
+* **Text Halo de Legibilidade**: Para anular o ruído do fundo marinho texturizado, todos os rótulos de texto sob as ilhas devem ser renderizados da seguinte forma para criar um contorno de contraste perfeito:
   ```css
   .island-label {
       font-family: var(--font-body);
@@ -280,16 +318,22 @@ Para garantir visibilidade excepcional em telas digitais de alta resolução:
   }
   ```
 
-### 8.2. Painéis do Console de Ações
-* **Contraste de Desabilitação**: Botões de ação desabilitados (`:disabled`) devem possuir opacidade de `0.35`, com fontes em cor cinza contrastante (`hsl(210, 8%, 50%)`) para fácil distinção táctil.
-* **Log do Diário de Bordo**: Deve categorizar mensagens por cores funcionais (Vermelho para combate/danos, Verde para transações/acordos, Dourado para eventos globais) em fonte mono-espaçada.
+### 8.4. Rotas e Hazards Climáticos no SVG
+* **Caminhos de Navegação**: As rotas marítimas são renderizadas como linhas translúcidas conectando as ilhas (`stroke: rgba(255, 255, 255, 0.22)`).
+* **Animação de Hazards Climáticos**: Rotas perigosas de tormenta devem piscar e pulsar de forma animada usando cor coral/vermelha vibrante (`rgba(255, 75, 43, 0.6)`) com padrão pontilhado (`stroke-dasharray`) que se desloca indefinidamente (`animation: hazardPulse 1.5s infinite linear`).
 
-### 8.3. Layout Focado no Mapa e Painéis Retráteis (Collapsible)
-* **Visual Fullscreen**: O mapa interativo (`#map-panel`) deve servir de plano de fundo principal da tela ocupando 100% da largura e altura visíveis (`100vw` e `100vh`), utilizando a textura premium integrada `nautical_sea_chart.png`.
-* **Painéis Flutuantes e Colapsáveis**:
-  - O painel de jogadores (`#players-panel`) e o console de ações/loja/eventos/logs (`#control-panel`) devem flutuar de forma translúcida sobre o mapa.
-  - Cada painel possui botões de gatilho de recolhimento (`◀` / `▶`) anexados às suas bordas internas.
-  - Clicar nos gatilhos deve deslizar os painéis para fora da tela usando transições suaves de CSS (`transform: translateX`). Os botões de toggle permanecem nas bordas da tela para re-expansão rápida.
+### 8.5. Console de Ações e Contraste de Acessibilidade
+* **Opacidade de Desabilitação**: Botões de ação desabilitados (por falta de AP ou recursos) devem possuir opacidade reduzida de `0.35`, com fontes em cor cinza contrastante (`hsl(210, 8%, 50%)`) para fácil distinção táctil rápida.
+* **Console Tático Adaptativo**: Os botões devem exibir claramente o custo de AP e responder dinamicamente ao jogador ativo, habilitando ou desabilitando opções em tempo real.
 
-### 8.4. Telas de Splash e Ativos de Arte Temáticos
-* **Imagem de Fundo de Passagem de Turno**: O modal de pass-and-play (`modal-turn-transition`) deve exibir o banner temático do Trono Vazio utilizando a arte digital exclusiva gerada `empty_throne.png` mesclada com gradientes escuros, garantindo privacidade e cimentando o tema imperial do jogo.
+### 8.6. Diário de Bordo (Console de Logs)
+* O console de log deve manter um histórico rolável de todos os eventos significativos da partida.
+* Mensagens do sistema e interações devem ser codificadas cromaticamente por função usando fontes mono-espaçadas:
+  - *Dourado / Amarelo*: Mensagens do sistema, passagens de Atos e eventos globais da Era.
+  - *Vermelho Claro*: Combates, danos infligidos e baixas de frotas.
+  - *Verde Menta*: Transações de troca, acordos celebrados e diplomacia.
+
+### 8.7. Splash Screens e Modais de Turno Bloqueantes
+* **Privacidade Absoluta (Pass-and-Play)**: O modal de transição de turno (`#modal-turn-transition`) deve sobrepor-se inteiramente ao jogo, bloqueando a visão de qualquer informação secreta na mesa antes que o jogador correto confirme que assumiu os controles do dispositivo.
+* **Banner do Trono Vazio**: O modal de transição deve exibir o banner temático do Trono Vazio utilizando a arte digital integrada `assets/images/empty_throne.png` mesclada com gradientes escuros, garantindo privacidade e cimentando o tema geopolítico imperial do jogo.
+* **Modais Funcionais de Resolução**: As interfaces de Combate, Exploração de Quests e Compras de Armas devem possuir estruturas de sobreposição com desfoque de fundo (`backdrop-filter: blur(8px)`) para concentrar o foco da tomada de decisão.
